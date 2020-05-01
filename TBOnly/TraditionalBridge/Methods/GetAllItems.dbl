@@ -1,0 +1,35 @@
+
+import System.Collections
+import Synergex.SynergyDE.Select
+import TraditionalBridge
+
+function get_all_items, int
+	required out aItems, @ArrayList
+	required out aErrorMessage, a80
+	endparams
+
+	stack record
+		status, int
+		item, strItem
+	endrecord
+proc
+
+	aItems = new ArrayList()
+
+	try
+	begin
+		foreach item in new Select(new From("DAT:items.ism",item))
+			aItems.Add((@strItem)item)
+		status = 0
+		aErrorMessage = ""
+	end
+	catch (e, @Exception)
+	begin
+		status = 1
+		aErrorMessage = e.Message
+	end
+	endtry
+
+	freturn status
+
+endfunction

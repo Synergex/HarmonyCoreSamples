@@ -1,0 +1,21 @@
+import System
+import System.Collections.Generic
+import System.Text
+import System.Threading.Tasks
+import Services.Models
+import Harmony.Core
+import TraditionalBridge
+import System.Runtime.CompilerServices
+namespace Services.Controllers
+
+	public partial class TraditionalBridgeService 
+		public async method GetAllItems, @Task<IEnumerable<Item>>
+		proc
+			RuntimeHelpers.RunClassConstructor(^typeof(Item).TypeHandle)
+			data resultTuple = await CallMethod("GetAllItems", ArgumentHelper.MaybeNull<IEnumerable<Item>>(^null))
+
+			mreturn ArgumentHelper.Argument<IEnumerable<Item>>(0, resultTuple)
+		endmethod
+	endclass
+
+endnamespace
