@@ -54,6 +54,11 @@ import System.ComponentModel.DataAnnotations
 import <MODELS_NAMESPACE>
 
 namespace <NAMESPACE>
+<ENUM_LOOP>
+.ifndef <ENUM_NAME>
+.include "<ENUM_NAME>" repository, enum
+.endc
+</ENUM_LOOP>
 <METHOD_LOOP>
 
 ;;--------------------------------------------------------------------------------
@@ -84,11 +89,13 @@ namespace <NAMESPACE>
         ;;; No description found in method catalog
         </IF COMMENT>
         ;;; </summary>
-        public readwrite property <PARAMETER_NAME>, <HARMONYCORE_BRIDGE_PARAMETER_TYPE>
+        public <PARAMETER_NAME>, <IF COLLECTION>[#]</IF><HARMONYCORE_BRIDGE_PARAMETER_TYPE>
         </IF IN_OR_INOUT>
       </PARAMETER_LOOP>
 
     endclass
+  <ELSE>
+    ;; This method has no in parameters
   </IF IN_OR_INOUT>
 ;//
 ;// RESPONSE MODEL
@@ -104,7 +111,7 @@ namespace <NAMESPACE>
         ;;; <summary>
         ;;; Return value
         ;;; </summary>
-        public readwrite property ReturnValue, <HARMONYCORE_BRIDGE_RETURN_TYPE>
+        public ReturnValue, <HARMONYCORE_BRIDGE_RETURN_TYPE>
     </IF FUNCTION>
     <IF OUT_OR_INOUT>
       <PARAMETER_LOOP>
@@ -118,13 +125,15 @@ namespace <NAMESPACE>
         ;;; No description found in method catalog
         </IF COMMENT>
         ;;; </summary>
-        public readwrite property <PARAMETER_NAME>, <HARMONYCORE_BRIDGE_PARAMETER_TYPE><IF STRING>, String.Empty</IF STRING><IF ALPHA>, String.Empty</IF ALPHA>
+        public <PARAMETER_NAME>, <IF COLLECTION>[#]</IF><HARMONYCORE_BRIDGE_PARAMETER_TYPE>
         </IF OUT_OR_INOUT>
       </PARAMETER_LOOP>
     </IF OUT_OR_INOUT>
 
     endclass
 
+  <ELSE>
+    ;; This method does not return any data!
   </IF RETURNS_DATA>
 </METHOD_LOOP>
 endnamespace

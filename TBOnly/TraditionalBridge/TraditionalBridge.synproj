@@ -34,7 +34,7 @@
     <UnevaluatedOutputPath>bin\$(Configuration)\$(Platform)</UnevaluatedOutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <DebugOptimize>Debug</DebugOptimize>
+    <DebugOptimize>Debug (full)</DebugOptimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <IncludeDebugInformation>False</IncludeDebugInformation>

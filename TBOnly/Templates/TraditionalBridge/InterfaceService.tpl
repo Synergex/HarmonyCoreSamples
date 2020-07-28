@@ -70,6 +70,19 @@ namespace <NAMESPACE>
 
     public partial class <INTERFACE_NAME>Service extends DynamicCallProvider
 
+        static IsInitialized, boolean
+        static method <INTERFACE_NAME>Service
+        proc
+        <METHOD_LOOP>
+            <PARAMETER_LOOP>
+                <IF STRUCTURE>
+            DataObjectMetadataBase.LookupType(^typeof(<StructureNoplural>))
+                </IF STRUCTURE>
+            </PARAMETER_LOOP>
+        </METHOD_LOOP>
+            IsInitialized = true
+        endmethod
+
         ;;; <summary>
         ;;; Constructor
         ;;; </summary>
@@ -78,7 +91,8 @@ namespace <NAMESPACE>
             endparams
             parent(connection)
         proc
-            
+            if(!IsInitialized)
+                throw new Exception("cctor missing")
         endmethod
 <METHOD_LOOP>
 
@@ -98,32 +112,34 @@ namespace <NAMESPACE>
             ;;Make the JSON-RPC call the traditional Synergy routine
             data resultTuple = await CallMethod("<METHOD_NAME>"
     <PARAMETER_LOOP>
-            &   ,<IF OPTIONAL>ArgumentHelper.MayBeOptional(</IF OPTIONAL><IF IN_OR_INOUT>args.<PARAMETER_NAME><ELSE>response.<PARAMETER_NAME></IF IN_OR_INOUT><IF OPTIONAL>)</IF OPTIONAL>
+            &   ,<IF OPTIONAL>ArgumentHelper.MayBeOptional(</IF OPTIONAL><IF IN_OR_INOUT>args.<PARAMETER_NAME><ELSE STRUCTURE>ArgumentHelper.MaybeNull(response.<PARAMETER_NAME>)<ELSE>response.<PARAMETER_NAME></IF IN_OR_INOUT><IF OPTIONAL>)</IF OPTIONAL>
     </PARAMETER_LOOP>
             &   )
   <IF RETURNS_DATA>
-
-            ;;Get the returned information
-            data returnToken = (@JToken)(resultTuple.Item1)
     <IF FUNCTION>
 
-            ;;Set the return value in the return data
-            response.ReturnValue = returnToken.ToObject<<HARMONYCORE_BRIDGE_RETURN_TYPE>>()
+             ;;Set the return value in the return data
+            ArgumentHelper.Argument(0, resultTuple, response.ReturnValue)
     </IF FUNCTION>
-    <IF OUT_OR_INOUT>
+;//
+    <COUNTER_1_RESET>
+    <PARAMETER_LOOP>
+        <IF COUNTER_1_EQ_0 AND OPTIONAL>
+            <COUNTER_1_INCREMENT>
 
-            ;;Set returned values for OUT or INOUT parameters
             data resultList, @List<Object>, resultTuple.Item2.ToList()
+        </IF>
+    </PARAMETER_LOOP>
+
     <PARAMETER_LOOP>
       <IF OUT_OR_INOUT>
-        <IF REQUIRED>
-            response.<PARAMETER_NAME> = (<HARMONYCORE_BRIDGE_PARAMETER_TYPE>)resultList[<PARAMETER_NUMBER> - 1]
-        <ELSE>
+      <IF OPTIONAL>
             response.<PARAMETER_NAME> = ^as(resultList[<PARAMETER_NUMBER> - 1],<HARMONYCORE_BRIDGE_PARAMETER_TYPE>)
-        </IF REQUIRED>
+      <ELSE>
+            ArgumentHelper.Argument(<PARAMETER_NUMBER>, resultTuple, response.<PARAMETER_NAME>)
+      </IF>
       </IF OUT_OR_INOUT>
     </PARAMETER_LOOP>
-  </IF OUT_OR_INOUT>
 
             ;;Return the response
             mreturn response
