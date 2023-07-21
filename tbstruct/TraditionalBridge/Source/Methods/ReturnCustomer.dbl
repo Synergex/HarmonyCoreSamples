@@ -1,0 +1,40 @@
+import System.Collections
+import Synergex.SynergyDE.Select
+import TraditionalBridge
+import TraditionalBridge.Models
+
+function ReturnCustomer
+    required in id, i1
+    required out errorMessage, a80
+    endparams
+    
+    record
+        cust, strCustomer
+    
+    stack record
+        status, int
+        customer, strCustomer
+    endrecord
+proc
+    try
+    begin
+        foreach customer in new Select(new From("DAT:customers.ism",customer))
+        begin
+            if(customer.customer_number .eq. id)
+            begin
+                cust = (@strCustomer)customer
+                exitloop
+            end
+        end
+        status = 0
+        errorMessage = ""
+    end
+    catch (e, @Exception)
+    begin
+        status = 1
+        errorMessage = e.Message
+    end
+    endtry
+
+    freturn cust
+endfunction

@@ -1,0 +1,13 @@
+;;*****************************************************************************
+;;
+;; Title:       GetEnvironment.dbl
+;;
+;; Description: An example routine for Traditional Bridge.
+;;              Returns the Synergy DBL version number and operating system.
+;;
+;;*****************************************************************************
+
+function GetEnvironment, a
+proc
+    freturn %versn
+endfunction

@@ -1,0 +1,33 @@
+import System.Collections
+import Synergex.SynergyDE.Select
+import TraditionalBridge
+import TraditionalBridge.Models
+
+function GetAllCustomers, int
+    required out cust, @ArrayList
+    required out errorMessage, a80
+    endparams
+
+    stack record
+        status, int
+        customer, strCustomer
+    endrecord
+proc
+    try
+    begin
+        cust = new ArrayList()
+        
+        foreach customer in new Select(new From("DAT:customers.ism",customer))
+            cust.Add((@strCustomer)customer)
+        status = 0
+        errorMessage = ""
+    end
+    catch (e, @Exception)
+    begin
+        status = 1
+        errorMessage = e.Message
+    end
+    endtry
+
+    freturn status
+endfunction

@@ -1,0 +1,93 @@
+import Harmony.AspNetCore
+import Harmony.AspNetCore.Context
+import Harmony.Core
+import Harmony.Core.Context
+import Harmony.Core.FileIO
+import Harmony.Core.Interface
+import Harmony.Core.Utility
+import Harmony.OData
+import Harmony.OData.Adapter
+import Microsoft.AspNetCore.Builder
+import Microsoft.AspNetCore.Hosting
+import Microsoft.AspNetCore.Http
+import Microsoft.AspNetCore.Mvc
+import Microsoft.AspNetCore.Mvc.Abstractions
+import Microsoft.AspNetCore.Mvc.ApiExplorer
+import Microsoft.AspNetCore.StaticFiles
+import Microsoft.AspNetCore.Builder
+import Microsoft.AspNetCore.Mvc.ApplicationModels
+import Microsoft.AspNetCore.OData
+import Microsoft.AspNetCore.OData.Extensions
+import Microsoft.AspNetCore.OData.Routing
+import Microsoft.AspNetCore.OData.Formatter
+import Microsoft.AspNetCore.Routing
+import Microsoft.EntityFrameworkCore
+import Microsoft.Extensions.Configuration
+import Microsoft.Extensions.DependencyInjection
+import Microsoft.Extensions.DependencyInjection.Extensions
+import Microsoft.Extensions.Configuration
+import Microsoft.Extensions.DependencyInjection
+import Microsoft.Extensions.DependencyInjection.Extensions
+import Microsoft.Extensions.Logging
+import Microsoft.Extensions.Options
+import Microsoft.Extensions.Primitives
+import Microsoft.Net.Http.Headers
+import Microsoft.OData
+import Microsoft.OData.Edm
+import Microsoft.OData.UriParser
+import Microsoft.OpenApi.Models
+import System.Collections.Generic
+import System.IO
+import System.Linq
+import System.Runtime.InteropServices
+import System.Text
+import System.Threading.Tasks
+import Services.Controllers
+import Services.Models
+import Swashbuckle.AspNetCore.Swagger
+
+namespace Services
+
+    public partial class Startup
+        partial method ConfigureServicesCustom, void
+            services, @Microsoft.Extensions.DependencyInjection.IServiceCollection
+        proc
+            services.AddScoped<IPrimaryKeyFactory,PrimaryKeyGenerator>()
+
+            ;;----------------------------------------------
+            ;; Configure the Traditional Bridge environment.
+
+            data traditionalBridgeDirectory, string
+            data logLevel, string
+
+            if (_env.IsDevelopment()) then
+            begin
+                traditionalBridgeDirectory=Environment.GetEnvironmentVariable("EXEDIR")
+                if (String.IsNullOrWhiteSpace(traditionalBridgeDirectory))
+                begin
+                    throw new ApplicationException("Logical name EXEDIR is not set. It must point to the TraditionalBridge host application.")
+                end
+                logLevel = "6"
+            end
+            else
+            begin
+                traditionalBridgeDirectory = Path.GetFullPath(Path.GetDirectoryName(^typeof(Startup).Assembly.Location))
+                logLevel = "2"
+            end
+            data launchCommand, string, Path.Combine(traditionalBridgeDirectory,"launch.bat")
+            data environmentVariables, @Dictionary<string,string>,new Dictionary<string,string>(){{"HARMONY_LOG_LEVEL",logLevel}}
+            data contextPool, @ExternalContextPool<BridgeMethodsService>, new ExternalContextPool<BridgeMethodsService>
+            &    (
+            &    launchCommand,
+            &    "optional_command_parameters",
+            &    traditionalBridgeDirectory,
+            &    environmentVariables,
+            &    4
+            &    ) 
+            ;; Make 'BridgeMethodsService' available as a DI service
+            services.AddSingleton<IContextFactory<BridgeMethodsService>>(contextPool)
+            services.AddContextPool<BridgeMethodsService>() 
+        endmethod
+    endclass
+
+endnamespace

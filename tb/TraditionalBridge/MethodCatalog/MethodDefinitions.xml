@@ -1,0 +1,46 @@
+﻿<?xml version='1.0'?>
+<component name="MethodDefinitions" repository="D:\HarmonyCoreProjectTemplates\ProjectTemplates\dotnet-new-harmonydemo-synergy\Repository\bin\Debug" smc="D:\HarmonyCoreProjectTemplates\ProjectTemplates\dotnet-new-harmonydemo-synergy\TraditionalBridge\MethodCatalog" smcrev="5">
+	<interface name="BridgeMethods">
+		<method name="AddTwoNumbers" id="AddTwoNumbers" routine="AddTwoNumbers" elb="EXE:BridgeMethods">
+			<comment>
+				<line1>Add two numbers</line1>
+			</comment>
+			<param name="number1" type="decimal" size="28" precision="10">
+				<comment>
+					<line1>First number</line1>
+				</comment>
+			</param>
+			<param name="number2" type="decimal" size="28" precision="2">
+				<comment>
+					<line1>Second number</line1>
+				</comment>
+			</param>
+			<param name="result" type="decimal" size="28" precision="10" dir="out">
+				<comment>
+					<line1>Resulting number</line1>
+				</comment>
+			</param>
+		</method>
+		<method name="GetEnvironment" id="GetEnvironment" routine="GetEnvironment" elb="EXE:BridgeMethods">
+			<comment>
+				<line1>Get environment string</line1>
+			</comment>
+			<methodresult type="string" size="0">
+				<comment>
+					<line1>Returned environment string</line1>
+				</comment>
+			</methodresult>
+		</method>
+		<method name="GetLogicalName" id="GetLogicalName" routine="GetLogicalName" elb="EXE:BridgeMethods">
+			<comment>
+				<line1>Get a logical name's value</line1>
+			</comment>
+			<methodresult type="string" size="0"/>
+			<param name="aLogicalName" type="string" size="0">
+				<comment>
+					<line1>Logical name</line1>
+				</comment>
+			</param>
+		</method>
+	</interface>
+</component>

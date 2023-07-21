@@ -1,0 +1,46 @@
+import System.Collections
+import Synergex.SynergyDE.Select
+import TraditionalBridge
+import TraditionalBridge.Models
+
+function ManyCustomers, string
+    required in cust, @ArrayList
+    required out errorMessage, a80
+    endparams
+
+    record
+        custList, @ArrayList
+        customer1Argument, string
+        customer1Actual, string
+
+    stack record
+        status, string
+        customer, strCustomer
+    endrecord
+proc
+    try
+    begin
+        custList = new ArrayList()
+        status = "not equal"
+        foreach customer in new Select(new From("DAT:customers.ism",customer))
+        begin
+            custList.Add((@strCustomer)customer)
+        end
+        
+        ;; check if we have the same data for customer
+        customer1Actual = custList[0].ToString()
+        customer1Argument = cust[0].ToString()
+
+        if (customer1Actual .eq. customer1Argument)
+            status = "equal"   
+
+        errorMessage = ""
+    end
+    catch (e, @Exception)
+    begin
+        errorMessage = e.Message
+    end
+    endtry
+
+    freturn status
+endfunction

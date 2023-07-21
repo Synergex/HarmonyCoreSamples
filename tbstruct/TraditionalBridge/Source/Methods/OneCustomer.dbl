@@ -1,0 +1,33 @@
+import System.Collections
+import Synergex.SynergyDE.Select
+import TraditionalBridge
+import TraditionalBridge.Models
+
+function OneCustomer, string
+    required in cust, strCustomer
+    required out errorMessage, a80
+    endparams
+    
+    stack record
+        status, string
+        customer, strCustomer
+    endrecord
+proc
+    try
+    begin
+        status = "not found"
+        foreach customer in new Select(new From("DAT:customers.ism",customer))
+        begin
+            if (cust .eq. customer)
+               status = "found"
+        end
+        errorMessage = ""
+    end
+    catch (e, @Exception)
+    begin
+        errorMessage = e.Message
+    end
+    endtry
+
+    freturn status
+endfunction
