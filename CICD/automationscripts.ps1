@@ -173,6 +173,7 @@ function TestTb($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
+    dotnet dev-certs https --clean
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -k -X POST -H "Content-Type: application/json" -d '{ "number1": 1, "number2":2 }'
@@ -191,6 +192,7 @@ function TestTbStruct($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
+    dotnet dev-certs https --clean
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     echo "Test GetAllCustomers endpoint"
@@ -294,6 +296,7 @@ function TestTbAuth($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
+    dotnet dev-certs https --clean
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     $token = curl.exe https://localhost:8086/Authentication/GetToken -k -X POST -H "Content-Type: application/json" -d '{ \"Username\": \"username\", \"Password\": \"password\" }'
@@ -330,6 +333,7 @@ function TestTbStructAuth($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
+    dotnet dev-certs https --clean
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     echo "Get Auth Token"
