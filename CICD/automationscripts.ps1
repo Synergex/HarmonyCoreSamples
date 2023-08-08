@@ -173,7 +173,7 @@ function TestTb($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
-    $process = start-process powershell '-c', {dotnet run} -passthru -windowstyle hidden
+    $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -k -X POST -H "Content-Type: application/json" -d '{ "number1": 1, "number2":2 }'
     taskkill /f /pid $process.id /t
@@ -191,7 +191,7 @@ function TestTbStruct($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
-    $process = start-process powershell '-c', {dotnet run} -passthru -windowstyle hidden
+    $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     echo "Test GetAllCustomers endpoint"
     $res1 = curl.exe https://localhost:8086/BridgeMethods/GetAllCustomers -k -X GET -H "Content-Type: application/json"
@@ -294,7 +294,7 @@ function TestTbAuth($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
-    $process = start-process powershell '-c', {dotnet run} -passthru -windowstyle hidden
+    $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     $token = curl.exe https://localhost:8086/Authentication/GetToken -k -X POST -H "Content-Type: application/json" -d '{ \"Username\": \"username\", \"Password\": \"password\" }'
     $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -k -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $token" -d '{ "number1": 1, "number2":2 }'
@@ -330,7 +330,7 @@ function TestTbStructAuth($path)
     $env:solutiondir="$path\"
     $env:exedir="${env:solutiondir}tbexe\release"
     cd ${env:solutiondir}Services.Host
-    $process = start-process powershell '-c', {dotnet run} -passthru -windowstyle hidden
+    $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     echo "Get Auth Token"
     $token = curl.exe https://localhost:8086/Authentication/GetToken -k -X POST -H "Content-Type: application/json" -d '{ \"Username\": \"username\", \"Password\": \"password\" }'
