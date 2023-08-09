@@ -175,7 +175,7 @@ function TestTb($path)
     cd ${env:solutiondir}Services.Host
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
-    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -k -X POST -H "Content-Type: application/json" -d '{ "number1": 1, "number2":2 }'
+    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -s -k -X POST -H "Content-Type: application/json" -d '{ "number1": 1, "number2":2 }'
     taskkill /f /pid $process.id /t
     $res
     if ($res -ne '{"result":3.0000000000}') 
@@ -194,15 +194,15 @@ function TestTbStruct($path)
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     echo "Test GetAllCustomers endpoint"
-    $res1 = curl.exe https://localhost:8086/BridgeMethods/GetAllCustomers -k -X GET -H "Content-Type: application/json"
+    $res1 = curl.exe https://localhost:8086/BridgeMethods/GetAllCustomers -s -k -X GET -H "Content-Type: application/json"
     $res1
 
     echo "Test GetCustomer endpoint"
-    $res2 = curl.exe https://localhost:8086/BridgeMethods/GetCustomer -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }'
+    $res2 = curl.exe https://localhost:8086/BridgeMethods/GetCustomer -s -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }'
     $res2
 
     echo "Test ReturnCustomer endpoint"
-    $res3 = curl.exe https://localhost:8086/BridgeMethods/ReturnCustomer -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }'
+    $res3 = curl.exe https://localhost:8086/BridgeMethods/ReturnCustomer -s -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }'
     $res3
 
     echo "Test OneCustomer endpoint"
@@ -211,7 +211,7 @@ function TestTbStruct($path)
     $res4DataReq = $res4DataReq | convertto-json
     $res4DataReq = $res4DataReq -replace "\r\n", ""
     $res4DataReq = $res4DataReq -replace "`"", "\`""
-    $res4 = curl.exe https://localhost:8086/BridgeMethods/OneCustomer -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res4DataReq}"
+    $res4 = curl.exe https://localhost:8086/BridgeMethods/OneCustomer -s -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res4DataReq}"
     $res4
 
     echo "Test ManyCustomers endpoint"
@@ -220,7 +220,7 @@ function TestTbStruct($path)
     $res5DataReq = $res5DataReq | convertto-json
     $res5DataReq = $res5DataReq -replace "\r\n", ""
     $res5DataReq = $res5DataReq -replace "`"", "\`""
-    $res5 = curl.exe https://localhost:8086/BridgeMethods/ManyCustomers -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res5DataReq}"
+    $res5 = curl.exe https://localhost:8086/BridgeMethods/ManyCustomers -s -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res5DataReq}"
     $res5
 
     taskkill /f /pid $process.id /t
@@ -296,8 +296,8 @@ function TestTbAuth($path)
     cd ${env:solutiondir}Services.Host
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
-    $token = curl.exe https://localhost:8086/Authentication/GetToken -k -X POST -H "Content-Type: application/json" -d '{ \"Username\": \"username\", \"Password\": \"password\" }'
-    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -k -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $token" -d '{ "number1": 1, "number2":2 }'
+    $token = curl.exe https://localhost:8086/Authentication/GetToken -s -k -X POST -H "Content-Type: application/json" -d '{ \"Username\": \"username\", \"Password\": \"password\" }'
+    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -s -k -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $token" -d '{ "number1": 1, "number2":2 }'
     $res
     if ($res -ne '{"result":3.0000000000}') 
     {
@@ -305,7 +305,7 @@ function TestTbAuth($path)
         taskkill /f /pid $process.id /t
         exit -1 
     }
-    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -k -X POST -H "Content-Type: application/json" -d '{ "number1": 1, "number2":2 }'
+    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -s -k -X POST -H "Content-Type: application/json" -d '{ "number1": 1, "number2":2 }'
     $res
     if ($res -ne $null) 
     {
@@ -313,7 +313,7 @@ function TestTbAuth($path)
         taskkill /f /pid $process.id /t
         exit -1 
     }
-    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -k -X POST -H "Content-Type: application/json" -H "Authorization: Bearer hello" -d '{ "number1": 1, "number2":2 }'
+    $res = curl.exe https://localhost:8086/BridgeMethods/AddTwoNumbers -s -k -X POST -H "Content-Type: application/json" -H "Authorization: Bearer hello" -d '{ "number1": 1, "number2":2 }'
     $res
     if ($res -ne $null) 
     {
@@ -333,17 +333,17 @@ function TestTbStructAuth($path)
     $process = start-process powershell '-c', {dotnet run} -passthru -NoNewWindow
     sleep 120
     echo "Get Auth Token"
-    $token = curl.exe https://localhost:8086/Authentication/GetToken -k -X POST -H "Content-Type: application/json" -d '{ \"Username\": \"username\", \"Password\": \"password\" }'
+    $token = curl.exe https://localhost:8086/Authentication/GetToken -s -k -X POST -H "Content-Type: application/json" -d '{ \"Username\": \"username\", \"Password\": \"password\" }'
     echo "Test GetAllCustomers endpoint"
-    $res1 = curl.exe https://localhost:8086/BridgeMethods/GetAllCustomers -k -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $token"
+    $res1 = curl.exe https://localhost:8086/BridgeMethods/GetAllCustomers -s -k -X GET -H "Content-Type: application/json" -H "Authorization: Bearer $token"
     $res1
 
     echo "Test GetCustomer endpoint"
-    $res2 = curl.exe https://localhost:8086/BridgeMethods/GetCustomer -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }' -H "Authorization: Bearer $token"
+    $res2 = curl.exe https://localhost:8086/BridgeMethods/GetCustomer -s -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }' -H "Authorization: Bearer $token"
     $res2
 
     echo "Test ReturnCustomer endpoint"
-    $res3 = curl.exe https://localhost:8086/BridgeMethods/ReturnCustomer -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }' -H "Authorization: Bearer $token"
+    $res3 = curl.exe https://localhost:8086/BridgeMethods/ReturnCustomer -s -k -X POST -H "Content-Type: application/json" -d '{ "id": 1 }' -H "Authorization: Bearer $token"
     $res3
 
     echo "Test OneCustomer endpoint"
@@ -352,7 +352,7 @@ function TestTbStructAuth($path)
     $res4DataReq = $res4DataReq | convertto-json
     $res4DataReq = $res4DataReq -replace "\r\n", ""
     $res4DataReq = $res4DataReq -replace "`"", "\`""
-    $res4 = curl.exe https://localhost:8086/BridgeMethods/OneCustomer -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res4DataReq}" -H "Authorization: Bearer $token"
+    $res4 = curl.exe https://localhost:8086/BridgeMethods/OneCustomer -s -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res4DataReq}" -H "Authorization: Bearer $token"
     $res4
 
     echo "Test ManyCustomers endpoint"
@@ -361,7 +361,7 @@ function TestTbStructAuth($path)
     $res5DataReq = $res5DataReq | convertto-json
     $res5DataReq = $res5DataReq -replace "\r\n", ""
     $res5DataReq = $res5DataReq -replace "`"", "\`""
-    $res5 = curl.exe https://localhost:8086/BridgeMethods/ManyCustomers -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res5DataReq}" -H "Authorization: Bearer $token"
+    $res5 = curl.exe https://localhost:8086/BridgeMethods/ManyCustomers -s -k -X POST -H "Content-Type: application/json" -d "{`"cust`": $res5DataReq}" -H "Authorization: Bearer $token"
     $res5
 
     taskkill /f /pid $process.id /t
